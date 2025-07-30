@@ -1,0 +1,47 @@
+.top-header {
+  direction: ltr;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 65px;
+  background-color: white;
+  color: #A67769;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+font-family: 'Cairo', sans-serif !important;
+}
+
+.top-header > .logo,
+.top-header > .site-name,
+.top-header > .lang-switch {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  justify-content: flex-start;
+  padding-right: 15px;
+}
+
+.site-name {
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.lang-switch {
+  justify-content: flex-end;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+.logo img {
+  height: 90px;
+}

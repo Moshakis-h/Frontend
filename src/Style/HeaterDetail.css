@@ -1,0 +1,137 @@
+.heater-detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f6f5;
+  min-height: 100vh;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  color: #A67769;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(166, 119, 105, 0.2);
+  border-radius: 50%;
+  border-top: 5px solid #A67769;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.heater-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9e0de;
+  position: relative;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #A67769;
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+  align-self: flex-start;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.back-button:hover {
+  background-color: #8d5e51;
+  transform: translateY(-2px);
+}
+
+.back-button svg {
+  margin-right: 8px;
+}
+
+.heater-header h1 {
+  margin: 0;
+  color: #5a4a45;
+  font-size: 1.8rem;
+  text-align: center;
+  width: 100%;
+}
+
+.heater-image-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(166, 119, 105, 0.1);
+  margin-bottom: 30px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.heater-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.heater-image:hover {
+  transform: scale(1.02);
+}
+
+.heater-info {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(166, 119, 105, 0.05);
+  text-align: center;
+  color: #5a4a45;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+  .heater-image-container {
+    height: 350px;
+  }
+  
+  .heater-header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heater-image-container {
+    height: 250px;
+    padding: 10px;
+  }
+  
+  .heater-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .heater-info {
+    padding: 15px;
+    font-size: 1rem;
+  }
+}

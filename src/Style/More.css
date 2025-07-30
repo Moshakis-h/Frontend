@@ -1,0 +1,97 @@
+.more-container{
+  padding-top:50px ;
+}
+.more-section {
+  font-family: 'Cairo', sans-serif;
+  padding-top: 0.5rem;
+  padding-bottom: 50px ;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  direction: ltr;
+  width: 100%;
+  
+  box-sizing: border-box;
+}
+
+.more-header {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-bottom: 1px solid #A67769;
+}
+
+.more-header h2 {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 26px;
+  font-weight: bold;
+  color: #111;
+  cursor: pointer;
+}
+
+.more-list {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1rem;
+  list-style: none;
+}
+
+.more-list li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  color: #111;
+  cursor: pointer;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.store-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.store-buttons img {
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+}
+
+.support-text {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #222;
+}
+
+.support-text strong {
+  color: #222;
+}
+
+.sponsor-logo img {
+  margin-top: 15px;
+  width: 30px;
+  height: auto;
+}

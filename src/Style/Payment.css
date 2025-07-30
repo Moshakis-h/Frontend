@@ -1,0 +1,260 @@
+
+.payment-container {
+  max-width: 400px;
+  padding: 5px 1px;
+  min-height: 100vh;
+  background-color: #eee;
+  direction: rtl;
+  font-family: sans-serif;
+}
+
+.payment-header {
+  width: 100%;
+}
+
+.payment-header img {
+  object-fit: cover;
+  width: 100%;
+  
+}
+
+.beneficiary-section{
+  background: #fff;
+  margin: 5px 20px;
+  padding:10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #bbb;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.beneficiary-section .beneficiary-logo{
+  width: 30%;
+}
+.beneficiary-section .beneficiary-logo img{
+  object-fit: cover;
+  width: 100%;
+}
+.beneficiary-section .did{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+.beneficiary-section .did1 {
+  border-bottom: solid 1px #bbb;
+}
+
+.beneficiary-title {
+  color: #444;
+  font-size: 10px;
+  margin-bottom: 5px;
+  width: 40%;
+}
+
+.beneficiary-name {
+  text-align: right;
+  
+  width: 60%;
+  color: #107eca;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+
+.payment-form {
+  background: #fff;
+  margin: 5px 20px;
+  padding:10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap:0px;
+  border: 2px solid #bbb;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-groupp {
+  border-bottom:1px solid #aaa;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-groupp .form-label {
+  width: 40%;
+  
+}
+.form-groupp .form-label label{
+  color: #107eca;
+  font-size: 10px;
+  width: 100%;
+  font-weight:600 ;
+}
+.form-roww{
+  
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  gap:10px;
+  width: 60%;
+}
+
+
+.form-roww2{
+  gap:5px;
+  
+}
+.card-number-input,
+.bank-pin-input{
+width: 50%;
+}
+.mm , .yy{
+  width: 30%;
+}
+.card-number-input .cardNumber , .bank-input .bankInp , .bank-pin-input .PinInp , .mm .mmInp , .yy .yyInp , .cvv-input .cvvInp , .otpInp{
+width:100%;
+border:solid 1px #555;
+border-radius: 2px;
+padding: 2px;
+font-size: 12px;
+background: #fff;
+}
+  
+
+  
+.card-number-input .cardNumber ,
+.cvv-input .cvvInp {
+  border:solid 2px #107eca;
+} 
+
+
+.form-buttons {
+  border: 2px solid #bbb;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction:row ;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 20px;
+  padding:10px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.cancel-btn,
+.submitt-btn {
+  flex: 1;
+  padding: 1px;
+  border: solid 1px #ccc;
+  border-radius: 2px;
+  font-size: 12px;
+  
+  cursor: pointer;
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+
+.payment-footer {
+  margin-top: 30px;
+  padding-top: 15px;
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.payment-footer p{
+  color:#107eca;
+}
+/* أنماط لعرض المعلومات بدلاً من الحقول */
+.card-info-display,
+.expiry-info-display,
+.cvv-info-display {
+  
+  padding: 2px;
+  
+  text-align: right;
+  font-size: 12px;
+}
+
+
+/* شاشة التحميل */
+.loading-overlayy {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* طبقة شفافة داكنة */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.spinnerr {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-giff {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+/* إضافة أنماط العداد التنازلي */
+.otp-input {
+  position: relative;
+  width: 100%;
+}
+
+.countdown-timer {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #107eca;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.countdown-warning {
+  color: #ff0000;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* تعديل حقل الإدخال ليتناسب مع العداد */
+.otpInp {
+  width: 100%;
+  padding-left: 50px; /* إفساح مكان للعداد */
+  box-sizing: border-box;
+}
+
+/* التأكد من بقاء الأنماط الأخرى كما هي */
+/* ... باقي الأنماط الموجودة سابقًا ... */

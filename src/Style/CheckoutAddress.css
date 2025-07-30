@@ -1,0 +1,172 @@
+.checkout-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  direction: rtl;
+  background-color: #fff;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 70px;
+font-family: 'Cairo', sans-serif !important;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.header p {
+  font-size: 14px;
+  color: #666;
+}
+
+.address-section {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.address-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.address-type-selector {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  gap: 10px;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 12px 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s;
+  min-height: 80px;
+}
+
+.type-btn:hover {
+  border-color: #A67769;
+  transform: translateY(-2px);
+}
+
+.type-btn.active {
+  border-color: #A67769;
+  background-color: rgba(166, 119, 105, 0.1);
+  box-shadow: 0 4px 8px rgba(166, 119, 105, 0.1);
+}
+
+.type-btn .icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.type-btn.active .icon {
+  color: #A67769;
+}
+
+.type-btn span {
+  font-size: 14px;
+  color: #555;
+}
+
+.type-btn.active span {
+  color: #A67769;
+  font-weight: 600;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  flex: 1;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  height: 50px;
+  resize: none;
+}
+
+.form-group.optional label::after {
+  content: " (اختياري)";
+  font-size: 12px;
+  color: #999;
+}
+
+.form-group.error input,
+.form-group.error textarea {
+  border-color: #e74c3c;
+  border-width: 2px;
+}
+
+.error-msg {
+  display: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #A67769;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  font-weight: 600;
+}
+
+.submit-btn:hover {
+  background-color: #8d6154;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(166, 119, 105, 0.2);
+}

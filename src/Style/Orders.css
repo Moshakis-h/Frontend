@@ -1,0 +1,54 @@
+.orders-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Cairo', sans-serif !important;
+  padding:60px 1px;
+}
+
+
+
+.orders-list {
+  width: 100%;
+  box-sizing:border-box;
+  background-color: white;
+  
+  padding: 0px;
+  margin: 20px 0;
+}
+
+
+
+.no-orders {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-radius:none;
+  border-bottom: 1px solid #eee;
+  box-sizing:border-box;
+}
+
+.order-code {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.order-date {
+  color: #666;
+  font-size: 12px;
+}
+
+.cancell{
+  background-color:#A67769;
+  width:30%;
+  padding:2px 5px;
+  border-radius:4px; 
+  color:#fff;
+}
