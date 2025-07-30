@@ -132,7 +132,7 @@ function Register() {
           <div className="input-group" style={{ gap: '1px' }}>
             <BiPhone style={{ color: '#A67769', margin: '0 10px' }} />
             <input
-              type="text"
+              type="number"
               name="phone"
               placeholder="أدخل رقم هاتفك"
               required
