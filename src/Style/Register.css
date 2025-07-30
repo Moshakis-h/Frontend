@@ -99,24 +99,23 @@ font-family: 'Cairo', sans-serif !important;
       font-weight: 400;
     }
 
-    .error-message,
-    .success-message {
-      padding: 8px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 400;
-      display: none;
+    .error-messa,
+    .success-messa {
+ padding: 5px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
     }
 
-    .error-message {
+    .error-messa {
       background-color: #ffeaea;
       border: 1px solid #ffbdbd;
       color: #b10000;
     }
 
-    .success-message {
+    .success-messa {
       background-color: #e7ffe7;
       border: 1px solid #b3ffb3;
       color: #067d06;

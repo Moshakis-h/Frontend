@@ -104,7 +104,7 @@ function Register() {
           navigate('/login');
         }, 1500);
       } else {
-        setErrorMessage(data.message || 'حدث خطأ أثناء التسجيل');
+        setErrorMessage('حدث خطأ أثناء التسجيل');
       }
     } catch (error) {
       setErrorMessage('فشل الاتصال بالخادم، حاول لاحقاً.');
@@ -118,8 +118,8 @@ function Register() {
       <div className="register-content">
         <h2>أنشئ حساب</h2>
 
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && <div className="success-message">{successMessage}</div>}
+        {errorMessage && <div className="error-messa">{errorMessage}</div>}
+        {successMessage && <div className="success-messa">{successMessage}</div>}
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="country">البلد</label>

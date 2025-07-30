@@ -67,7 +67,7 @@ function Login() {
           }
         }, 1500);
       } else {
-        setErrorMessage(data.message || 'حدث خطأ أثناء تسجيل الدخول');
+        setErrorMessage('معلومات التسجيل غير صحيحة');
       }
     } catch (err) {
       setErrorMessage('تعذر الاتصال بالخادم، حاول لاحقاً.');
