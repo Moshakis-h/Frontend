@@ -5,7 +5,7 @@ const ConfirmButton = ({ totalPrice, currency, handleConfirm }) => (
     className="confirm-button" 
     onClick={handleConfirm}
   >
-    أضف إلى طلبك {totalPrice.toFixed(3)} {currency}
+    أضف إلى طلبك {totalPrice} {currency}
   </button>
 );
 

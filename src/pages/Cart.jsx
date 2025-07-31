@@ -90,7 +90,7 @@ function Cart() {
             <div key={item.id} className="cart-item">
               <div className="cart-header">
                 <span className="price">
-                  <p>{currency}</p><p>{item.basePrice.toFixed(3)}</p>
+                  <p>{currency}</p><p>{item.basePrice}</p> {/* تمت إزالة toFixed(3) هنا */}
                 </span>
                 <span className="title">
                   <div className="tit">{item.title}</div> x
@@ -101,7 +101,7 @@ function Cart() {
               <ul className="options-list">
                 {item.extras.map((extra, i) => (
                   <li key={i}>
-                    <span className="price"><p>{currency}</p><p>{extra.price.toFixed(3)}</p></span>
+                    <span className="price"><p>{currency}</p><p>{extra.price}</p></span> {/* تمت إزالة toFixed(3) هنا */}
                     {extra.name}
                   </li>
                 ))}
@@ -127,7 +127,7 @@ function Cart() {
       {cart.length > 0 && (
         <div className="cart-summary">
           <div className="totall">
-            <div className="priceTotal"><p>{currency}</p><p>{totalAll.toFixed(3)}</p></div>
+            <div className="priceTotal"><p>{currency}</p><p>{totalAll}</p></div> {/* تمت إزالة toFixed(3) هنا */}
             <div>:المجموع </div>
           </div>
           <button className="confirm-btn" onClick={handleConfirmOrder}>تأكيد الطلب</button>
