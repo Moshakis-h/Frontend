@@ -8,10 +8,13 @@ const GuestRoute = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
+    console.log("GuestRoute token from localStorage:", token);
     
     if (token) {
+      console.log("Token found, redirecting to settings");
       navigate('/settings');
     } else {
+      console.log("No token found, allowing guest access");
       setChecking(false);
     }
   }, [navigate]);

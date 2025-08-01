@@ -12,22 +12,27 @@ function Settings() {
     try {
       const apiUrl = process.env.REACT_APP_API_BASE_URL;
       if (!apiUrl) {
-        throw new Error('REACT_APP_API_BASE_URL غير معرّف');
+        throw new Error('REACT_APP_API_BASE_URL is not defined');
       }
+      
+      console.log("Sending logout request to:", `${apiUrl}/api/auth/logout`);
       
       const res = await fetch(`${apiUrl}/api/auth/logout`, {
         method: "POST",
       });
 
+      console.log("Logout response status:", res.status);
+      
       if (res.ok) {
         localStorage.removeItem('authToken');
+        console.log("Token removed from localStorage");
         navigate("/login");
       } else {
         const data = await res.json();
-        setError(data.message || "فشل تسجيل الخروج");
+        setError(data.message || "Logout failed");
       }
     } catch (err) {
-      setError("تعذر الاتصال بالخادم: " + err.message);
+      setError("Server connection error: " + err.message);
     } finally {
       setLoading(false);
     }
