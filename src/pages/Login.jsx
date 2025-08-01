@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiEnvelope, BiLock } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
-import { isProblematicBrowser } from '../utils/browserUtils';
 import '../Style/Login.css';
 
 function Login() {
@@ -51,10 +50,7 @@ function Login() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache'
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(formData),
       });
@@ -63,12 +59,11 @@ function Login() {
 
       if (res.ok) {
         setSuccessMessage('تم تسجيل الدخول بنجاح!');
-        
         setTimeout(() => {
-          if (isProblematicBrowser()) {
-            window.location.href = data.user?.role === 'admin' ? '/admin' : '/';
+          if (data.user?.role === 'admin') {
+            navigate('/admin');
           } else {
-            navigate(data.user?.role === 'admin' ? '/admin' : '/');
+            navigate('/');
           }
         }, 1500);
       } else {
@@ -94,7 +89,7 @@ function Login() {
           </div>
         )}
         {successMessage && (
-          <div className="success-message" style={{ display: 'block' }}>
+          <div className="success-messa" style={{ display: 'block' }}>
             {successMessage}
           </div>
         )}

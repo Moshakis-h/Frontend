@@ -14,20 +14,12 @@ const ProtectedRoute = ({ requiredRole }) => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const timestamp = new Date().getTime();
-        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify?t=${timestamp}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
           method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
+          credentials: 'include'
         });
 
-        const hasTokenCookie = document.cookie.split(';').some(cookie => cookie.trim().startsWith('token='));
-        
-        if (res.ok && hasTokenCookie) {
+        if (res.ok) {
           const data = await res.json();
           setAuthState({
             loading: false,
@@ -40,7 +32,7 @@ const ProtectedRoute = ({ requiredRole }) => {
             isAuthenticated: false,
             role: null
           });
-          setTimeout(() => navigate('/login'), 100);
+          navigate('/login');
         }
       } catch (error) {
         setAuthState({
@@ -48,7 +40,7 @@ const ProtectedRoute = ({ requiredRole }) => {
           isAuthenticated: false,
           role: null
         });
-        setTimeout(() => navigate('/login'), 100);
+        navigate('/login');
       }
     };
 
@@ -57,7 +49,7 @@ const ProtectedRoute = ({ requiredRole }) => {
 
   if (authState.loading) return <Spinner />;
 
-  if (!authState.isAuthenticated) return null;
+  if (!authState.isAuthenticated) return null; // تم التوجيه في useEffect
 
   if (requiredRole && authState.role !== requiredRole) {
     navigate('/');
