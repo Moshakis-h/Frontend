@@ -9,13 +9,18 @@ const GuestRoute = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
-          method: 'GET',
+        const timestamp = new Date().getTime();
+        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify?t=${timestamp}`, {
           credentials: 'include',
+          headers: {
+            'Cache-Control': 'no-store'
+          }
         });
 
-        if (res.ok) {
-          navigate('/settings');
+        const hasToken = document.cookie.includes('token');
+        
+        if (res.ok && hasToken) {
+          window.location.href = '/settings';
         } else {
           setChecking(false);
         }

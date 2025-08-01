@@ -10,7 +10,6 @@ function Settings() {
     setLoading(true);
     setError('');
     try {
-      // استخدام متغير البيئة هنا
       const apiUrl = process.env.REACT_APP_API_BASE_URL;
       if (!apiUrl) {
         throw new Error('REACT_APP_API_BASE_URL غير معرّف');
@@ -19,10 +18,14 @@ function Settings() {
       const res = await fetch(`${apiUrl}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
       });
 
       if (res.ok) {
-        navigate("/login");
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        setTimeout(() => window.location.href = '/login', 300);
       } else {
         const data = await res.json();
         setError(data.message || "فشل تسجيل الخروج");
