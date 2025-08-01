@@ -28,22 +28,25 @@ const ProtectedRoute = ({ requiredRole }) => {
           }
         });
 
-        if (res.ok) {
-          const data = await res.json();
-          setAuthState({
-            loading: false,
-            isAuthenticated: true,
-            role: data.role
-          });
-          
-          if (requiredRole && data.role !== requiredRole) {
-            navigate('/');
-          }
-        } else {
-          localStorage.removeItem('authToken');
-          navigate('/login');
+        // التحقق من حالة الاستجابة
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Verification failed: ${res.status} - ${errorText}`);
+        }
+        
+        const data = await res.json();
+        
+        setAuthState({
+          loading: false,
+          isAuthenticated: true,
+          role: data.role
+        });
+        
+        if (requiredRole && data.role !== requiredRole) {
+          navigate('/');
         }
       } catch (error) {
+        console.error('Verification error:', error);
         localStorage.removeItem('authToken');
         navigate('/login');
       }

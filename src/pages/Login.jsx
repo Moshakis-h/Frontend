@@ -48,31 +48,40 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'معلومات التسجيل غير صحيحة');
+      // التحقق من حالة الاستجابة
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Request failed: ${response.status} - ${errorText}`);
       }
 
-      const data = await res.json();
+      const data = await response.json();
       
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-        setSuccessMessage('تم تسجيل الدخول بنجاح!');
-        setTimeout(() => {
-          navigate(data.user?.role === 'admin' ? '/admin' : '/');
-        }, 1500);
-      } else {
+      // التحقق من وجود التوكن
+      if (!data.token) {
         throw new Error('Token is missing in response');
       }
+      
+      localStorage.setItem('authToken', data.token);
+      
+      setSuccessMessage('تم تسجيل الدخول بنجاح!');
+      setTimeout(() => {
+        if (data.user?.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      }, 1500);
     } catch (err) {
+      console.error('Login error:', err);
       setErrorMessage(err.message || 'تعذر الاتصال بالخادم، حاول لاحقاً.');
     } finally {
       setIsLoading(false);

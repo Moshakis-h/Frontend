@@ -20,8 +20,8 @@ function Settings() {
         localStorage.removeItem('authToken');
         navigate("/login");
       } else {
-        const data = await res.json();
-        setError(data.message || "Logout failed");
+        const errorText = await res.text();
+        setError(`Logout failed: ${res.status} - ${errorText}`);
       }
     } catch (err) {
       setError("Server connection error: " + err.message);
