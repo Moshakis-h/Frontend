@@ -50,32 +50,32 @@ function Login() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'معلومات التسجيل غير صحيحة');
+      }
 
-      if (res.ok) {
+      const data = await res.json();
+      
+      if (data.token) {
         localStorage.setItem('authToken', data.token);
-        
         setSuccessMessage('تم تسجيل الدخول بنجاح!');
         setTimeout(() => {
-          if (data.user?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
-          }
+          navigate(data.user?.role === 'admin' ? '/admin' : '/');
         }, 1500);
       } else {
-        setErrorMessage('معلومات التسجيل غير صحيحة');
+        throw new Error('Token is missing in response');
       }
     } catch (err) {
-      setErrorMessage('تعذر الاتصال بالخادم، حاول لاحقاً.');
+      setErrorMessage(err.message || 'تعذر الاتصال بالخادم، حاول لاحقاً.');
     } finally {
-      if (!successMessage) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   };
 
@@ -85,12 +85,12 @@ function Login() {
         <h2>تسجيل الدخول</h2>
         
         {errorMessage && (
-          <div className="error-messagee" style={{ display: 'block' }}>
+          <div className="error-messagee">
             {errorMessage}
           </div>
         )}
         {successMessage && (
-          <div className="success-message" style={{ display: 'block' }}>
+          <div className="success-message">
             {successMessage}
           </div>
         )}
