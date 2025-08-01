@@ -57,11 +57,6 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // تأكد من وجود التوكن قبل التخزين
-        if (!data.token) {
-          throw new Error("لم يتم استلام التوكن من الخادم");
-        }
-        
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         
@@ -74,11 +69,10 @@ function Login() {
           }
         }, 1500);
       } else {
-        setErrorMessage(data.message || 'معلومات التسجيل غير صحيحة');
+        setErrorMessage('معلومات التسجيل غير صحيحة');
       }
     } catch (err) {
       setErrorMessage('تعذر الاتصال بالخادم، حاول لاحقاً.');
-      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }
