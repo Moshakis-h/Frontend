@@ -48,41 +48,31 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      // التحقق من حالة الاستجابة
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Request failed: ${response.status} - ${errorText}`);
-      }
+      const data = await res.json();
 
-      const data = await response.json();
-      
-      // التحقق من وجود التوكن
-      if (!data.token) {
-        throw new Error('Token is missing in response');
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        setSuccessMessage('تم تسجيل الدخول بنجاح!');
+        setTimeout(() => {
+          if (data.user?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        }, 1500);
+      } else {
+        setErrorMessage('معلومات التسجيل غير صحيحة');
       }
-      
-      localStorage.setItem('authToken', data.token);
-      
-      setSuccessMessage('تم تسجيل الدخول بنجاح!');
-      setTimeout(() => {
-        if (data.user?.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
-      }, 1500);
     } catch (err) {
-      console.error('Login error:', err);
-      setErrorMessage(err.message || 'تعذر الاتصال بالخادم، حاول لاحقاً.');
+      setErrorMessage('تعذر الاتصال بالخادم، حاول لاحقاً.');
     } finally {
       setIsLoading(false);
     }
@@ -94,12 +84,12 @@ function Login() {
         <h2>تسجيل الدخول</h2>
         
         {errorMessage && (
-          <div className="error-messagee">
+          <div className="error-messagee" style={{ display: 'block' }}>
             {errorMessage}
           </div>
         )}
         {successMessage && (
-          <div className="success-message">
+          <div className="success-message" style={{ display: 'block' }}>
             {successMessage}
           </div>
         )}

@@ -13,50 +13,66 @@ const ProtectedRoute = ({ requiredRole }) => {
 
   useEffect(() => {
     const verifyAuth = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-          navigate('/login');
-          return;
-        }
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setAuthState({
+          loading: false,
+          isAuthenticated: false,
+          role: null
+        });
+        navigate('/login');
+        return;
+      }
 
-        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
+      try {
+        const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+        const res = await fetch(`${API_BASE_URL}/api/auth/verify`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
-        // التحقق من حالة الاستجابة
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`Verification failed: ${res.status} - ${errorText}`);
-        }
-        
-        const data = await res.json();
-        
-        setAuthState({
-          loading: false,
-          isAuthenticated: true,
-          role: data.role
-        });
-        
-        if (requiredRole && data.role !== requiredRole) {
-          navigate('/');
+        if (res.ok) {
+          const data = await res.json();
+          setAuthState({
+            loading: false,
+            isAuthenticated: true,
+            role: data.role
+          });
+        } else {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setAuthState({
+            loading: false,
+            isAuthenticated: false,
+            role: null
+          });
+          navigate('/login');
         }
       } catch (error) {
-        console.error('Verification error:', error);
-        localStorage.removeItem('authToken');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setAuthState({
+          loading: false,
+          isAuthenticated: false,
+          role: null
+        });
         navigate('/login');
       }
     };
 
     verifyAuth();
-  }, [navigate, requiredRole]);
+  }, [navigate]);
 
-  if (authState.loading) {
-    return <Spinner />;
+  if (authState.loading) return <Spinner />;
+
+  if (!authState.isAuthenticated) return null;
+
+  if (requiredRole && authState.role !== requiredRole) {
+    navigate('/');
+    return null;
   }
 
   return <Outlet />;

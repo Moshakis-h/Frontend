@@ -6,25 +6,15 @@ function Settings() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setLoading(true);
     setError('');
     try {
-      const apiUrl = process.env.REACT_APP_API_BASE_URL;
-      
-      const res = await fetch(`${apiUrl}/api/auth/logout`, {
-        method: "POST",
-      });
-
-      if (res.ok) {
-        localStorage.removeItem('authToken');
-        navigate("/login");
-      } else {
-        const errorText = await res.text();
-        setError(`Logout failed: ${res.status} - ${errorText}`);
-      }
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate("/login");
     } catch (err) {
-      setError("Server connection error: " + err.message);
+      setError("حدث خطأ أثناء تسجيل الخروج");
     } finally {
       setLoading(false);
     }
