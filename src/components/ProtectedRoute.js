@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import Spinner from './Spinner';
+import { verifyToken } from '../services/authService';
 
 const ProtectedRoute = ({ requiredRole }) => {
   const [authState, setAuthState] = useState({
@@ -12,51 +13,33 @@ const ProtectedRoute = ({ requiredRole }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const verifyAuth = async () => {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
+    const checkAuth = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (res.ok) {
-          const data = await res.json();
+        const authData = await verifyToken();
+        
+        if (authData.isAuthenticated) {
           setAuthState({
             loading: false,
             isAuthenticated: true,
-            role: data.role
+            role: authData.role
           });
+          
+          if (requiredRole && authData.role !== requiredRole) {
+            navigate('/');
+          }
         } else {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
           navigate('/login');
         }
       } catch (error) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
         navigate('/login');
       }
     };
 
-    verifyAuth();
-  }, [navigate]);
+    checkAuth();
+  }, [navigate, requiredRole]);
 
-  if (authState.loading) return <Spinner />;
-
-  if (!authState.isAuthenticated) return null;
-
-  if (requiredRole && authState.role !== requiredRole) {
-    navigate('/');
-    return null;
+  if (authState.loading) {
+    return <Spinner />;
   }
 
   return <Outlet />;

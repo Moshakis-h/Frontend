@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BiEnvelope, BiLock } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import '../Style/Login.css';
+import { loginUser } from '../services/authService';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -14,7 +15,6 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const validateForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,32 +48,18 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        // حفظ التوكن وبيانات المستخدم في localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        setSuccessMessage('تم تسجيل الدخول بنجاح!');
-        setTimeout(() => {
-          if (data.user?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
-          }
-        }, 1500);
-      } else {
-        setErrorMessage(data.message || 'معلومات التسجيل غير صحيحة');
-      }
+      const data = await loginUser(formData.email, formData.password);
+      
+      setSuccessMessage('تم تسجيل الدخول بنجاح!');
+      setTimeout(() => {
+        if (data.user?.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      }, 1500);
     } catch (err) {
-      setErrorMessage('تعذر الاتصال بالخادم، حاول لاحقاً.');
+      setErrorMessage(err.message || 'معلومات التسجيل غير صحيحة');
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { logoutUser } from '../services/authService';
 
 function Settings() {
   const navigate = useNavigate();
@@ -9,23 +10,11 @@ function Settings() {
   const handleLogout = async () => {
     setLoading(true);
     setError('');
-    
     try {
-      // مسح التوكن وبيانات المستخدم من localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      
-      // إرسال طلب تسجيل الخروج للخادم (اختياري)
-      const apiUrl = process.env.REACT_APP_API_BASE_URL;
-      if (apiUrl) {
-        await fetch(`${apiUrl}/api/auth/logout`, {
-          method: "POST",
-        });
-      }
-      
+      await logoutUser();
       navigate("/login");
     } catch (err) {
-      setError("تعذر الاتصال بالخادم: " + err.message);
+      setError('تعذر تسجيل الخروج');
     } finally {
       setLoading(false);
     }
