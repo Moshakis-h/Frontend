@@ -51,13 +51,14 @@ function Login() {
       const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData),
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        localStorage.setItem('authToken', data.token);
+        
         setSuccessMessage('تم تسجيل الدخول بنجاح!');
         setTimeout(() => {
           if (data.user?.role === 'admin') {
@@ -89,7 +90,7 @@ function Login() {
           </div>
         )}
         {successMessage && (
-          <div className="success-messa" style={{ display: 'block' }}>
+          <div className="success-message" style={{ display: 'block' }}>
             {successMessage}
           </div>
         )}

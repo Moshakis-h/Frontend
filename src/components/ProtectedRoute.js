@@ -14,9 +14,18 @@ const ProtectedRoute = ({ requiredRole }) => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+
         const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
           method: 'GET',
-          credentials: 'include'
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
 
         if (res.ok) {
@@ -26,35 +35,24 @@ const ProtectedRoute = ({ requiredRole }) => {
             isAuthenticated: true,
             role: data.role
           });
+          
+          if (requiredRole && data.role !== requiredRole) {
+            navigate('/');
+          }
         } else {
-          setAuthState({
-            loading: false,
-            isAuthenticated: false,
-            role: null
-          });
+          localStorage.removeItem('authToken');
           navigate('/login');
         }
       } catch (error) {
-        setAuthState({
-          loading: false,
-          isAuthenticated: false,
-          role: null
-        });
+        localStorage.removeItem('authToken');
         navigate('/login');
       }
     };
 
     verifyAuth();
-  }, [navigate]);
+  }, [navigate, requiredRole]);
 
   if (authState.loading) return <Spinner />;
-
-  if (!authState.isAuthenticated) return null; // تم التوجيه في useEffect
-
-  if (requiredRole && authState.role !== requiredRole) {
-    navigate('/');
-    return null;
-  }
 
   return <Outlet />;
 };

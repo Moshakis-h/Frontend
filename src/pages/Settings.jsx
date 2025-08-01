@@ -10,7 +10,6 @@ function Settings() {
     setLoading(true);
     setError('');
     try {
-      // استخدام متغير البيئة هنا
       const apiUrl = process.env.REACT_APP_API_BASE_URL;
       if (!apiUrl) {
         throw new Error('REACT_APP_API_BASE_URL غير معرّف');
@@ -18,10 +17,10 @@ function Settings() {
       
       const res = await fetch(`${apiUrl}/api/auth/logout`, {
         method: "POST",
-        credentials: "include",
       });
 
       if (res.ok) {
+        localStorage.removeItem('authToken');
         navigate("/login");
       } else {
         const data = await res.json();
