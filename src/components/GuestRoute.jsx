@@ -8,29 +8,15 @@ const GuestRoute = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
     
-    // إذا كان المستخدم مسجل دخول، توجيه إلى الإعدادات
-    if (token && user) {
-      try {
-        const userData = JSON.parse(user);
-        if (userData.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/settings');
-        }
-      } catch (e) {
-        console.error("User data parsing error:", e);
-        setChecking(false);
-      }
+    if (token) {
+      navigate('/settings');
     } else {
       setChecking(false);
     }
   }, [navigate]);
 
-  if (checking) {
-    return <Spinner />;
-  }
+  if (checking) return <Spinner />;
 
   return <Outlet />;
 };

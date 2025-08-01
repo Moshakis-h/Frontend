@@ -57,6 +57,7 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
+        // حفظ التوكن وبيانات المستخدم في localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         
@@ -69,7 +70,7 @@ function Login() {
           }
         }, 1500);
       } else {
-        setErrorMessage('معلومات التسجيل غير صحيحة');
+        setErrorMessage(data.message || 'معلومات التسجيل غير صحيحة');
       }
     } catch (err) {
       setErrorMessage('تعذر الاتصال بالخادم، حاول لاحقاً.');

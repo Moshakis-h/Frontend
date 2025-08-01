@@ -1,45 +1,35 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function Settings() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    // استرجاع بيانات المستخدم من localStorage
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (e) {
-        console.error("Failed to parse user data:", e);
-      }
-    }
-  }, []);
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setLoading(true);
     setError('');
+    
     try {
+      // مسح التوكن وبيانات المستخدم من localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      
+      // إرسال طلب تسجيل الخروج للخادم (اختياري)
+      const apiUrl = process.env.REACT_APP_API_BASE_URL;
+      if (apiUrl) {
+        await fetch(`${apiUrl}/api/auth/logout`, {
+          method: "POST",
+        });
+      }
+      
       navigate("/login");
     } catch (err) {
-      setError("حدث خطأ أثناء تسجيل الخروج");
+      setError("تعذر الاتصال بالخادم: " + err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  if (!user) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <p>جاري تحميل المعلومات...</p>
-      </div>
-    );
-  }
 
   return (
     <div style={{
@@ -101,8 +91,7 @@ function Settings() {
             fontWeight: '500',
             fontSize: '15px'
           }}>
-            <p style={{ margin: 0 }}>مرحباً {user.name}</p>
-            <p style={{ margin: '5px 0 0 0' }}>أنت مسجل دخول حالياً</p>
+            <p style={{ margin: 0 }}>أنت مسجل دخول حالياً</p>
           </div>
         </div>
 
