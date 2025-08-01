@@ -1,10 +1,23 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Settings() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // استرجاع بيانات المستخدم من localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error("Failed to parse user data:", e);
+      }
+    }
+  }, []);
 
   const handleLogout = () => {
     setLoading(true);
@@ -19,6 +32,14 @@ function Settings() {
       setLoading(false);
     }
   };
+
+  if (!user) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <p>جاري تحميل المعلومات...</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -80,7 +101,8 @@ function Settings() {
             fontWeight: '500',
             fontSize: '15px'
           }}>
-            <p style={{ margin: 0 }}>أنت مسجل دخول حالياً</p>
+            <p style={{ margin: 0 }}>مرحباً {user.name}</p>
+            <p style={{ margin: '5px 0 0 0' }}>أنت مسجل دخول حالياً</p>
           </div>
         </div>
 

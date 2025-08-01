@@ -8,41 +8,29 @@ const GuestRoute = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
     
-    if (!token) {
-      setChecking(false);
-      return;
-    }
-
-    // إذا كان هناك توكن، تحقق من صحته
-    const verifyToken = async () => {
+    // إذا كان المستخدم مسجل دخول، توجيه إلى الإعدادات
+    if (token && user) {
       try {
-        const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-        const res = await fetch(`${API_BASE_URL}/api/auth/verify`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (res.ok) {
-          navigate('/settings');
+        const userData = JSON.parse(user);
+        if (userData.role === 'admin') {
+          navigate('/admin');
         } else {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          setChecking(false);
+          navigate('/settings');
         }
-      } catch (err) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+      } catch (e) {
+        console.error("User data parsing error:", e);
         setChecking(false);
       }
-    };
-
-    verifyToken();
+    } else {
+      setChecking(false);
+    }
   }, [navigate]);
 
-  if (checking) return <Spinner />;
+  if (checking) {
+    return <Spinner />;
+  }
 
   return <Outlet />;
 };
