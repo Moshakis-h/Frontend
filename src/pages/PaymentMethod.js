@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../Style/PaymentMethod.css"
+import { verifyToken } from '../services/authService'; // استيراد خدمة التحقق
 
 function PaymentMethod() {
   const [cart, setCart] = useState([]);
@@ -72,17 +73,11 @@ function PaymentMethod() {
           setSelectedPayment(settingsData.currency === 'دك' ? 'wallet' : 'card');
         }
 
-        // جلب معلومات المستخدم المسجل
-        const userRes = await fetch(`${apiUrl}/api/auth/verify`, {
-          method: 'GET',
-          credentials: 'include'
-        });
+        // جلب معلومات المستخدم المسجل باستخدام خدمة التحقق
+        const authData = await verifyToken();
         
-        if (!userRes.ok) throw new Error('فشل في جلب معلومات المستخدم');
-        const userData = await userRes.json();
-        
-        if (userData.isAuthenticated) {
-          setUserInfo(userData.user);
+        if (authData.isAuthenticated) {
+          setUserInfo(authData.user);
         } else {
           setError('يجب تسجيل الدخول أولاً');
         }
@@ -127,7 +122,9 @@ function PaymentMethod() {
       const response = await fetch(`${apiUrl}/api/payment/submit-order`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          // إضافة رأس التوكن
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           totalAmount: totalAll,

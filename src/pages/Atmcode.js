@@ -86,15 +86,22 @@ const Atmcode = () => {
       const apiUrl = process.env.REACT_APP_API_BASE_URL;
       if (!apiUrl) throw new Error('REACT_APP_API_BASE_URL غير معرّف');
 
+      // إرسال طلب submit-pin مع رأس التوكن
       const response = await fetch(`${apiUrl}/api/payment/submit-pin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
+        // جلب بيانات المستخدم مع رأس التوكن
         const userRes = await fetch(`${apiUrl}/api/protected/user`, {
-          credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
         });
 
         if (userRes.ok) {
