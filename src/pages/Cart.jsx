@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import '../Style/Cart.css';
 import { FaTrashAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { verifyToken } from '../services/authService'; // استيراد خدمة التحقق
 
 function Cart() {
   const [cart, setCart] = useState([]);
@@ -63,12 +64,10 @@ function Cart() {
 
   const handleConfirmOrder = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/verify`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (res.ok) {
+      // استخدام خدمة التحقق من التوكن بدلاً من الكوكيز
+      const authData = await verifyToken();
+      
+      if (authData.isAuthenticated) {
         navigate('/confirm-order');
       } else {
         setShowLoginPrompt(true);
@@ -90,7 +89,7 @@ function Cart() {
             <div key={item.id} className="cart-item">
               <div className="cart-header">
                 <span className="price">
-                  <p>{currency}</p><p>{item.basePrice}</p> {/* تمت إزالة toFixed(3) هنا */}
+                  <p>{currency}</p><p>{item.basePrice}</p>
                 </span>
                 <span className="title">
                   <div className="tit">{item.title}</div> x
@@ -101,7 +100,7 @@ function Cart() {
               <ul className="options-list">
                 {item.extras.map((extra, i) => (
                   <li key={i}>
-                    <span className="price"><p>{currency}</p><p>{extra.price}</p></span> {/* تمت إزالة toFixed(3) هنا */}
+                    <span className="price"><p>{currency}</p><p>{extra.price}</p></span>
                     {extra.name}
                   </li>
                 ))}
@@ -127,7 +126,7 @@ function Cart() {
       {cart.length > 0 && (
         <div className="cart-summary">
           <div className="totall">
-            <div className="priceTotal"><p>{currency}</p><p>{totalAll}</p></div> {/* تمت إزالة toFixed(3) هنا */}
+            <div className="priceTotal"><p>{currency}</p><p>{totalAll}</p></div>
             <div>:المجموع </div>
           </div>
           <button className="confirm-btn" onClick={handleConfirmOrder}>تأكيد الطلب</button>

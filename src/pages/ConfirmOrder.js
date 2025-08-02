@@ -5,6 +5,7 @@ import { FaUser, FaPhone } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import Spinner from '../components/Spinner';
 import '../Style/ConfirmOrder.css';
+import { verifyToken } from '../services/authService'; // استيراد خدمة التحقق
 
 function ConfirmOrder() {
   const [userInfo, setUserInfo] = useState(null);
@@ -16,23 +17,17 @@ function ConfirmOrder() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // جلب إعدادات الموقع باستخدام متغير البيئة
+        // جلب إعدادات الموقع
         const settingsResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/public/settings`);
         if (!settingsResponse.ok) throw new Error('فشل في جلب إعدادات الموقع');
         const settingsData = await settingsResponse.json();
         setSiteSettings(settingsData);
         
-        // جلب معلومات المستخدم المسجل باستخدام متغير البيئة
-        const userResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
-          method: 'GET',
-          credentials: 'include'
-        });
+        // جلب معلومات المستخدم باستخدام خدمة التحقق من التوكن
+        const authData = await verifyToken();
         
-        if (!userResponse.ok) throw new Error('فشل في جلب معلومات المستخدم');
-        const userData = await userResponse.json();
-        
-        if (userData.isAuthenticated) {
-          setUserInfo(userData.user);
+        if (authData.isAuthenticated) {
+          setUserInfo(authData.user);
         } else {
           setError('يجب تسجيل الدخول أولاً');
         }
