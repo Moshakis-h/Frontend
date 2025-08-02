@@ -76,7 +76,7 @@ function Login() {
           </div>
         )}
         {successMessage && (
-          <div className="success-message" style={{ display: 'block' }}>
+          <div className="success-messa" style={{ display: 'block' }}>
             {successMessage}
           </div>
         )}
