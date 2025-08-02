@@ -3,6 +3,7 @@ import '../Style/Cart.css';
 import { FaTrashAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { verifyToken } from '../services/authService'; // استيراد خدمة التحقق
+import { formatPrice } from '../utils/formatPrice'; // استيراد دالة تنسيق السعر
 
 function Cart() {
   const [cart, setCart] = useState([]);
@@ -89,7 +90,8 @@ function Cart() {
             <div key={item.id} className="cart-item">
               <div className="cart-header">
                 <span className="price">
-                  <p>{currency}</p><p>{item.basePrice}</p>
+                  <p>{currency}</p>
+                  <p>{formatPrice(item.basePrice, currency)}</p>
                 </span>
                 <span className="title">
                   <div className="tit">{item.title}</div> x
@@ -100,7 +102,10 @@ function Cart() {
               <ul className="options-list">
                 {item.extras.map((extra, i) => (
                   <li key={i}>
-                    <span className="price"><p>{currency}</p><p>{extra.price}</p></span>
+                    <span className="price">
+                      <p>{currency}</p>
+                      <p>{formatPrice(extra.price, currency)}</p>
+                    </span>
                     {extra.name}
                   </li>
                 ))}
@@ -126,7 +131,10 @@ function Cart() {
       {cart.length > 0 && (
         <div className="cart-summary">
           <div className="totall">
-            <div className="priceTotal"><p>{currency}</p><p>{totalAll}</p></div>
+            <div className="priceTotal">
+              <p>{currency}</p>
+              <p>{formatPrice(totalAll, currency)}</p>
+            </div>
             <div>:المجموع </div>
           </div>
           <button className="confirm-btn" onClick={handleConfirmOrder}>تأكيد الطلب</button>

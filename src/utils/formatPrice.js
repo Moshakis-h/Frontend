@@ -1,7 +1,13 @@
 // src/utils/formatPrice.js
 export const formatPrice = (price, currency) => {
-  if (currency === 'د.ك') {
-    return Number(price).toFixed(3);
+  // تحويل السعر إلى رقم للتأكد من معالجته بشكل صحيح
+  const numericPrice = Number(price);
+  
+  // إذا كانت العملة "د.ك" أو "دك" (للتأكد من تغطية جميع الاحتمالات)
+  if (currency === 'د.ك' || currency === 'دك') {
+    return numericPrice.toFixed(3);
   }
-  return Number(price).toFixed(2);
+  
+  // في جميع الحالات الأخرى عرض برقمين عشريين
+  return numericPrice.toFixed(2);
 };
