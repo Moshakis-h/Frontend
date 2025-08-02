@@ -9,6 +9,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import ConfirmButton from '../components/ConfirmButton';
 import Spinner from '../components/Spinner';
 import { getSections } from '../utils/sectionData';
+import { formatPrice } from '../utils/formatPrice'; // استيراد الدالة الجديدة
 
 function Details() {
   const navigate = useNavigate();
@@ -393,7 +394,7 @@ function Details() {
           <p className="desc">{product.description}</p>
           <div className="prices">
             <p className="priceName">السعر: </p>
-            <p className="priceRealy">{product.price}{currency}</p>
+            <p className="priceRealy">{formatPrice(product.price, currency)} {currency}</p>
           </div>
         </div>
         

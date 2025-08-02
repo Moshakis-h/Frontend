@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaImages } from 'react-icons/fa';
+import { formatPrice } from '../utils/formatPrice'; // استيراد الدالة الجديدة
 
 const OptionItem = ({ 
   section, 
@@ -52,7 +53,7 @@ const OptionItem = ({
           {option.name}
           {option.price > 0 && (
             <span className="option-price"> 
-              +{option.price}{currency}
+              +{formatPrice(option.price, currency)} {currency}
             </span>
           )}
         </div>

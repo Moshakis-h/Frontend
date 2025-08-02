@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import '../Style/Home.css';
 import { useNavigate } from 'react-router-dom';
-import { formatPrice } from '../utils/formatPrice';
+import { formatPrice } from '../utils/formatPrice'; // استيراد الدالة الجديدة
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -135,13 +135,13 @@ function Home() {
                   <div className="product-info">
                     <p className="title">{product.title}</p>
                     <p className="description">{product.description}</p>
-    <div className="price-cart">
-      <div className="priceSet">
-        <p className="currency">{currency}</p>
-        <span className="price">{formatPrice(product.price, currency)}</span>
-      </div>
-      <button className="addto-cart">+ أضف إلسلة</button>
-    </div>
+                    <div className="price-cart">
+                      <div className="priceSet">
+                        <p className="currency">{currency}</p>
+                        <span className="price">{formatPrice(product.price, currency)}</span>
+                      </div>
+                      <button className="addto-cart">+ أضف إلسلة</button>
+                    </div>
                   </div>
                 </div>
               ))}
