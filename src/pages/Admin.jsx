@@ -391,10 +391,10 @@ function Admin() {
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
           >
-            <option value="دك">دينار كويتي</option>
-            <option value="دا">درهم إماراتي</option>
-            <option value="رق">ريال قطري</option>
-            <option value="رس">ريال سعودي</option>
+            <option value="د.ك">دينار كويتي</option>
+            <option value="د.ا">درهم إماراتي</option>
+            <option value="ر.ق">ريال قطري</option>
+            <option value="ر.س">ريال سعودي</option>
           </select>
           <button className="admin-button" onClick={updateSettings}>
             تحديث الإعدادات
