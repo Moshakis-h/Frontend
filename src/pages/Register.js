@@ -62,18 +62,19 @@ function Register() {
   };
 
   const validateForm = () => {
-    if (formData.password.length < 6) {
-      setErrorMessage('كلمة المرور يجب أن تكون 6 أحرف أو أكثر');
-      return false;
-    }
+  if (formData.password.length < 6) {
+    setErrorMessage('كلمة المرور يجب أن تكون 6 أحرف أو أكثر');
+    return false;
+  }
 
-    if (formData.phone.length < 9 || formData.phone.length > 10) {
-      setErrorMessage('رقم الهاتف يجب أن يكون بين 9 و 10 أرقام');
-      return false;
-    }
+  // تم تغيير التحقق هنا ليكون فقط من وجود قيمة
+  if (!formData.phone) {
+    setErrorMessage('رقم الهاتف مطلوب');
+    return false;
+  }
 
-    return true;
-  };
+  return true;
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
