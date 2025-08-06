@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import Spinner from './Spinner';
-import { verifyToken } from '../services/authService';
 
-const ProtectedRoute = ({ requiredRole }) => {
+const ProtectedRoute = ({ requiredRole, optional = false }) => {
   const [authState, setAuthState] = useState({
     loading: true,
     isAuthenticated: false,
@@ -15,28 +14,48 @@ const ProtectedRoute = ({ requiredRole }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const authData = await verifyToken();
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
         
-        if (authData.isAuthenticated) {
+        if (token && user) {
+          const userData = JSON.parse(user);
           setAuthState({
             loading: false,
             isAuthenticated: true,
-            role: authData.role
+            role: userData.role
           });
           
-          if (requiredRole && authData.role !== requiredRole) {
+          if (requiredRole && userData.role !== requiredRole) {
             navigate('/');
           }
         } else {
-          navigate('/login');
+          // إذا كان المسار اختياري نسمح بالمرور
+          if (optional) {
+            setAuthState({
+              loading: false,
+              isAuthenticated: false,
+              role: null
+            });
+          } else {
+            navigate('/login');
+          }
         }
       } catch (error) {
-        navigate('/login');
+        // إذا كان المسار اختياري نسمح بالمرور حتى مع وجود خطأ
+        if (optional) {
+          setAuthState({
+            loading: false,
+            isAuthenticated: false,
+            role: null
+          });
+        } else {
+          navigate('/login');
+        }
       }
     };
 
     checkAuth();
-  }, [navigate, requiredRole]);
+  }, [navigate, requiredRole, optional]);
 
   if (authState.loading) {
     return <Spinner />;

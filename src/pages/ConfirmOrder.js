@@ -5,7 +5,6 @@ import { FaUser, FaPhone } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import Spinner from '../components/Spinner';
 import '../Style/ConfirmOrder.css';
-import { verifyToken } from '../services/authService'; // استيراد خدمة التحقق
 
 function ConfirmOrder() {
   const [userInfo, setUserInfo] = useState(null);
@@ -23,13 +22,10 @@ function ConfirmOrder() {
         const settingsData = await settingsResponse.json();
         setSiteSettings(settingsData);
         
-        // جلب معلومات المستخدم باستخدام خدمة التحقق من التوكن
-        const authData = await verifyToken();
-        
-        if (authData.isAuthenticated) {
-          setUserInfo(authData.user);
-        } else {
-          setError('يجب تسجيل الدخول أولاً');
+        // جلب معلومات المستخدم من localStorage
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUserInfo(JSON.parse(storedUser));
         }
         
         setLoading(false);
@@ -65,9 +61,9 @@ function ConfirmOrder() {
         <div className="error-message">{error}</div>
         <button 
           className="continue-button"
-          onClick={() => navigate('/login')}
+          onClick={() => navigate('/')}
         >
-          تسجيل الدخول
+          العودة للصفحة الرئيسية
         </button>
       </div>
     );
