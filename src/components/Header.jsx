@@ -8,7 +8,7 @@ const Header = () => {
       <div className="logo">
         <img src={logo} alt="logo" />
       </div>
-      <div className="site-name">بوفيهات رويال</div>
+      <div className="site-name">بوفيه رويال</div>
       <div className="lang-switch">EN</div>
     </div>
   );
