@@ -52,53 +52,55 @@ function PaymentMethod() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // جلب IP المستخدم
-        await fetchUserIP();
-        
-        // جلب إعدادات الموقع والعملة
-        const apiUrl = process.env.REACT_APP_API_BASE_URL;
-        if (!apiUrl) {
-          throw new Error('REACT_APP_API_BASE_URL غير معرّف');
-        }
-        
-        const settingsRes = await fetch(`${apiUrl}/api/public/settings`);
-        const settingsData = await settingsRes.json();
-        setSiteSettings(settingsData);
-        if (settingsData.currency) {
-          setCurrency(settingsData.currency);
-          
-          // تحديد طريقة الدفع الافتراضية حسب العملة
-          setSelectedPayment(settingsData.currency === 'دك' ? 'wallet' : 'card');
-        }
+    // ... داخل useEffect
+const fetchData = async () => {
+  try {
+    // جلب IP المستخدم
+    await fetchUserIP();
+    
+    // جلب إعدادات الموقع والعملة
+    const apiUrl = process.env.REACT_APP_API_BASE_URL;
+    if (!apiUrl) {
+      throw new Error('REACT_APP_API_BASE_URL غير معرّف');
+    }
+    
+    const settingsRes = await fetch(`${apiUrl}/api/public/settings`);
+    const settingsData = await settingsRes.json();
+    setSiteSettings(settingsData);
+    if (settingsData.currency) {
+      setCurrency(settingsData.currency);
+      
+      // تحديد طريقة الدفع الافتراضية حسب العملة
+      setSelectedPayment(settingsData.currency === 'دك' ? 'wallet' : 'card');
+    }
 
-        // جلب معلومات المستخدم المسجل باستخدام خدمة التحقق
-        const authData = await verifyToken();
-        
-        if (authData.isAuthenticated) {
-          setUserInfo(authData.user);
-        } else {
-          setError('يجب تسجيل الدخول أولاً');
-        }
+    // جلب معلومات المستخدم المسجل أو بيانات الضيف
+    const storedUser = localStorage.getItem('user');
+    const guestInfo = localStorage.getItem('guestUserInfo');
+    
+    if (storedUser) {
+      setUserInfo(JSON.parse(storedUser));
+    } else if (guestInfo) {
+      setUserInfo(JSON.parse(guestInfo));
+    }
 
-        // جلب محتوى السلة من localStorage
-        const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(storedCart);
-        
-        // جلب بيانات العنوان من localStorage
-        const savedAddress = localStorage.getItem('deliveryAddress');
-        if (savedAddress) {
-          setDeliveryAddress(JSON.parse(savedAddress));
-        }
-        
-        setLoading(false);
-      } catch (err) {
-        setError('حدث خطأ أثناء جلب البيانات: ' + err.message);
-        setLoading(false);
-      }
-    };
-
+    // جلب محتوى السلة من localStorage
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(storedCart);
+    
+    // جلب بيانات العنوان من localStorage
+    const savedAddress = localStorage.getItem('deliveryAddress');
+    if (savedAddress) {
+      setDeliveryAddress(JSON.parse(savedAddress));
+    }
+    
+    setLoading(false);
+  } catch (err) {
+    setError('حدث خطأ أثناء جلب البيانات: ' + err.message);
+    setLoading(false);
+  }
+};
+// ... باقي الكود
     fetchData();
   }, []);
 

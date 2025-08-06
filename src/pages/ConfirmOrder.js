@@ -11,6 +11,11 @@ function ConfirmOrder() {
   const [siteSettings, setSiteSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [guestInfo, setGuestInfo] = useState({
+    name: '',
+    phone: '',
+    email: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +31,12 @@ function ConfirmOrder() {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           setUserInfo(JSON.parse(storedUser));
+        } else {
+          // تحقق من وجود بيانات ضيف مخزنة مسبقاً
+          const savedGuestInfo = localStorage.getItem('guestUserInfo');
+          if (savedGuestInfo) {
+            setGuestInfo(JSON.parse(savedGuestInfo));
+          }
         }
         
         setLoading(false);
@@ -37,6 +48,27 @@ function ConfirmOrder() {
 
     fetchData();
   }, []);
+
+  const handleGuestChange = (e) => {
+    const { name, value } = e.target;
+    setGuestInfo(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleContinue = () => {
+    // إذا كان المستخدم غير مسجل، حفظ بياناته في localStorage
+    if (!userInfo) {
+      if (!guestInfo.name || !guestInfo.phone) {
+        alert('الرجاء إدخال الاسم ورقم الهاتف');
+        return;
+      }
+      localStorage.setItem('guestUserInfo', JSON.stringify(guestInfo));
+    }
+    
+    navigate('/checkoutaddress');
+  };
 
   if (loading) {
     return (
@@ -77,39 +109,80 @@ function ConfirmOrder() {
         <p>سنستخدمها للتواصل معك بشأن الطلبات</p>
       </div>
 
-      <div className="user-info-card">
-        <div className="info-block">
-          <label className="info-label">الاسم الكامل</label>
-          <div className="info-content">
-            <FaUser className="info-icon" />
-            <span className="info-value">{userInfo?.name || 'غير متوفر'}</span>
+      {userInfo ? (
+        // حالة المستخدم المسجل
+        <div className="user-info-card">
+          <div className="info-block">
+            <label className="info-label">الاسم الكامل</label>
+            <div className="info-content">
+              <FaUser className="info-icon" />
+              <span className="info-value">{userInfo?.name || 'غير متوفر'}</span>
+            </div>
           </div>
-        </div>
 
-        <div className="info-block">
-          <label className="info-label">رقم الهاتف</label>
-          <div className="info-content">
-            <FaPhone className="info-icon" />
-            <span className="info-value">
-              {userInfo?.phone || 'غير متوفر'} 
-              {siteSettings?.countryCode && ` (${siteSettings.countryCode})`}
-            </span>
+          <div className="info-block">
+            <label className="info-label">رقم الهاتف</label>
+            <div className="info-content">
+              <FaPhone className="info-icon" />
+              <span className="info-value">
+                {userInfo?.phone || 'غير متوفر'} 
+                {siteSettings?.countryCode && ` (${siteSettings.countryCode})`}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="info-block">
-          <label className="info-label">البريد الإلكتروني</label>
-          <div className="info-content">
-            <MdEmail className="info-icon" />
-            <span className="info-value">{userInfo?.email || 'غير متوفر'}</span>
+          <div className="info-block">
+            <label className="info-label">البريد الإلكتروني</label>
+            <div className="info-content">
+              <MdEmail className="info-icon" />
+              <span className="info-value">{userInfo?.email || 'غير متوفر'}</span>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        // حالة المستخدم غير المسجل
+        <div className="guest-form">
+          <div className="form-group">
+            <label>الاسم الكامل *</label>
+            <input
+              type="text"
+              name="name"
+              value={guestInfo.name}
+              onChange={handleGuestChange}
+              placeholder="أدخل اسمك"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>رقم الهاتف *</label>
+            <input
+              type="tel"
+              name="phone"
+              value={guestInfo.phone}
+              onChange={handleGuestChange}
+              placeholder="أدخل رقم هاتفك"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>البريد الإلكتروني (اختياري)</label>
+            <input
+              type="email"
+              name="email"
+              value={guestInfo.email}
+              onChange={handleGuestChange}
+              placeholder="أدخل بريدك الإلكتروني"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="button-container">
         <button 
           className="continue-button"
-          onClick={() => navigate('/checkoutaddress')}
+          onClick={handleContinue}
         >
           التالي
         </button>
