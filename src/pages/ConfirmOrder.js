@@ -140,41 +140,53 @@ function ConfirmOrder() {
           </div>
         </div>
       ) : (
-        // حالة المستخدم غير المسجل
-        <div className="guest-form">
-          <div className="form-group">
-            <label>الاسم الكامل *</label>
-            <input
-              type="text"
-              name="name"
-              value={guestInfo.name}
-              onChange={handleGuestChange}
-              placeholder="أدخل اسمك"
-              required
-            />
+        // حالة المستخدم غير المسجل - تصميم مطابق لحاويات المعلومات
+        <div className="user-info-card">
+          <div className="info-block">
+            <label className="info-label">الاسم الكامل *</label>
+            <div className="info-content">
+              <FaUser className="info-icon" />
+              <input
+                type="text"
+                name="name"
+                value={guestInfo.name}
+                onChange={handleGuestChange}
+                placeholder="أدخل اسمك"
+                required
+                className="guest-input"
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>رقم الهاتف *</label>
-            <input
-              type="tel"
-              name="phone"
-              value={guestInfo.phone}
-              onChange={handleGuestChange}
-              placeholder="أدخل رقم هاتفك"
-              required
-            />
+          <div className="info-block">
+            <label className="info-label">رقم الهاتف *</label>
+            <div className="info-content">
+              <FaPhone className="info-icon" />
+              <input
+                type="tel"
+                name="phone"
+                value={guestInfo.phone}
+                onChange={handleGuestChange}
+                placeholder="أدخل رقم هاتفك"
+                required
+                className="guest-input"
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>البريد الإلكتروني (اختياري)</label>
-            <input
-              type="email"
-              name="email"
-              value={guestInfo.email}
-              onChange={handleGuestChange}
-              placeholder="أدخل بريدك الإلكتروني"
-            />
+          <div className="info-block">
+            <label className="info-label">البريد الإلكتروني (اختياري)</label>
+            <div className="info-content">
+              <MdEmail className="info-icon" />
+              <input
+                type="email"
+                name="email"
+                value={guestInfo.email}
+                onChange={handleGuestChange}
+                placeholder="أدخل بريدك الإلكتروني"
+                className="guest-input"
+              />
+            </div>
           </div>
         </div>
       )}

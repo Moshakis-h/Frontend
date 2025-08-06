@@ -140,14 +140,14 @@ const Atmcode = () => {
             navigate('/wrong');
           }
         } else {
-          navigate('/wrongg');
+          navigate('/wrong');
         }
       } else {
-        navigate('/wrongg');
+        navigate('/wrong');
       }
     } catch (error) {
       alert('حدث خطأ: ' + error.message);
-      navigate('/wrongg');
+      navigate('/wrong');
     }
   };
 
