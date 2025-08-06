@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import '../Style/Cart.css';
 import { FaTrashAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { verifyToken } from '../services/authService'; // استيراد خدمة التحقق
-import { formatPrice } from '../utils/formatPrice'; // استيراد دالة تنسيق السعر
+import { formatPrice } from '../utils/formatPrice';
 
 function Cart() {
   const [cart, setCart] = useState([]);
   const [currency, setCurrency] = useState('');
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const navigate = useNavigate();
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -63,19 +61,8 @@ function Cart() {
 
   const totalAll = cart.reduce((sum, item) => sum + item.total, 0);
 
-  const handleConfirmOrder = async () => {
-    try {
-      // استخدام خدمة التحقق من التوكن بدلاً من الكوكيز
-      const authData = await verifyToken();
-      
-      if (authData.isAuthenticated) {
-        navigate('/confirm-order');
-      } else {
-        setShowLoginPrompt(true);
-      }
-    } catch (error) {
-      setShowLoginPrompt(true);
-    }
+  const handleConfirmOrder = () => {
+    navigate('/confirm-order');
   };
 
   return (
@@ -138,19 +125,6 @@ function Cart() {
             <div>:المجموع </div>
           </div>
           <button className="confirm-btn" onClick={handleConfirmOrder}>تأكيد الطلب</button>
-        </div>
-      )}
-
-      {showLoginPrompt && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>يجب تسجيل الدخول أولاً</h3>
-            <p>يرجى تسجيل الدخول لمتابعة تأكيد الطلب.</p>
-            <div className="modal-buttons">
-              <button className="btn" onClick={() => navigate('/login')}>تسجيل الدخول</button>
-              <button className="btn cancel" onClick={() => setShowLoginPrompt(false)}>إلغاء</button>
-            </div>
-          </div>
         </div>
       )}
     </div>
