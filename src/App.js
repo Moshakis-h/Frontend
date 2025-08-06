@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import GuestRoute from "./components/GuestRoute";
 
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
@@ -48,8 +50,13 @@ function Layout() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/more" element={<More />} />
         <Route path="/details" element={<Details />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        
+        {/* الصفحات للضيوف فقط */}
+        <Route element={<GuestRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+        
         <Route path="/settings" element={<Settings />} />
         <Route path="/paymentcard" element={<PaymentCard />} />  
         <Route path="/paymentcode" element={<PaymentCode />} />           
@@ -62,7 +69,11 @@ function Layout() {
         <Route path="/code" element={<Code />} /> 
         <Route path="/success" element={<Success />} />      
         <Route path="/wrong" element={<Wrong />} />
-        <Route path="/admin" element={<Admin />} />
+        
+        {/* صفحة الأدمن محمية */}
+        <Route element={<ProtectedRoute requiredRole="admin" />}>
+          <Route path="/admin" element={<Admin />} />
+        </Route>
       </Routes>
 
       {!hideNavbar && <Navbar />}
