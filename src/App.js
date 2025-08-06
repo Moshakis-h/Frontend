@@ -1,6 +1,3 @@
-انظر هذا الكود الحالي اجعل كل الصفحات غير محمية
-
-
 // App.js
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
@@ -95,3 +92,5 @@ function App() {
 }
 
 export default App;
+
+
