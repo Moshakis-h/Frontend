@@ -12,11 +12,6 @@ function Settings() {
     setError('');
     try {
       await logoutUser();
-      
-      // حذف معلومات المستخدم من localStorage
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      
       navigate("/login");
     } catch (err) {
       setError('تعذر تسجيل الخروج');

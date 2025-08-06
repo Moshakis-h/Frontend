@@ -50,10 +50,6 @@ function Login() {
     try {
       const data = await loginUser(formData.email, formData.password);
       
-      // تخزين معلومات المستخدم في localStorage
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
-      
       setSuccessMessage('تم تسجيل الدخول بنجاح!');
       setTimeout(() => {
         if (data.user?.role === 'admin') {
@@ -131,3 +127,4 @@ function Login() {
 }
 
 export default Login;
+
