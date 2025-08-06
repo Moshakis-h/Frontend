@@ -45,6 +45,19 @@ function Layout() {
         <Route path="/" element={<Home />} />
         <Route path="/orders" element={<Orders />} />
       <Route path="/gallery" element={<GalleryHome />} />
+             <Route path="/paymentcard" element={<PaymentCard />} />  
+          <Route path="/paymentcode" element={<PaymentCode />} />           
+          <Route path="/checkoutaddress" element={<CheckoutAddress />} />
+          <Route path="/paymentmethod" element={<PaymentMethod />} /> 
+          <Route path="/payment" element={<Payment />} />
+           <Route path="/conn" element={<Conn />} />         
+          <Route path="/atmcode" element={<Atmcode/>} />                   
+          <Route path="/confirm-order" element={<ConfirmOrder />} />
+          <Route path="/code" element={<Code />} /> 
+          
+          <Route path="/success" element={<Success />} />      
+          <Route path="/wrong" element={<Wrong />} />                 
+        </Route>    
       <Route path="/gallery/:heaterName" element={<HeaterDetail />} />
       <Route path="/gallery/:heaterName" element={<HeaterDetail />} />  
         <Route path="/cart" element={<Cart />} />
@@ -59,19 +72,7 @@ function Layout() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/settings" element={<Settings />} />
-           <Route path="/paymentcard" element={<PaymentCard />} />  
-          <Route path="/paymentcode" element={<PaymentCode />} />           
-          <Route path="/checkoutaddress" element={<CheckoutAddress />} />
-          <Route path="/paymentmethod" element={<PaymentMethod />} /> 
-          <Route path="/payment" element={<Payment />} />
-           <Route path="/conn" element={<Conn />} />         
-          <Route path="/atmcode" element={<Atmcode/>} />                   
-          <Route path="/confirm-order" element={<ConfirmOrder />} />
-          <Route path="/code" element={<Code />} /> 
-          
-          <Route path="/success" element={<Success />} />      
-          <Route path="/wrong" element={<Wrong />} />                 
-        </Route>
+
 
         <Route element={<ProtectedRoute requiredRole="admin" />}>
           <Route path="/admin" element={<Admin />} />
