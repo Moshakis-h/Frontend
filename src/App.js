@@ -2,9 +2,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
-import GuestRoute from "./components/GuestRoute";
-
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
 import Cart from "./pages/Cart";
@@ -26,16 +23,18 @@ import PaymentMethod from "./pages/PaymentMethod";
 import CheckoutAddress from "./pages/CheckoutAddress";
 import GalleryHome from './pages/GalleryHome';
 import HeaterDetail from './pages/HeaterDetail';
-import ConfirmOrder from "./pages/ConfirmOrder"; // ✅ أضفنا صفحة تأكيد الطلب
+import ConfirmOrder from "./pages/ConfirmOrder";
 
 function Layout() {
   const location = useLocation();
   const path = location.pathname;
 
-  const hideHeader = path === "/details" || path === "/admin" || path === "/payment" || path === "/code" || path === "/success" ||path === "/wrong" || path === "/paymentcard" || path === "/paymentcode" || path === "/conn";
+  const hideHeader = path === "/details" || path === "/admin" || path === "/payment" || 
+                    path === "/code" || path === "/success" || path === "/wrong" || 
+                    path === "/paymentcard" || path === "/paymentcode" || path === "/conn";
   
-  
-  const hideNavbar = path === "/admin" || path === "/payment" || path === "/code" || path === "/conn";
+  const hideNavbar = path === "/admin" || path === "/payment" || path === "/code" || 
+                     path === "/conn";
 
   return (
     <>
@@ -44,38 +43,26 @@ function Layout() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/orders" element={<Orders />} />
-      <Route path="/gallery" element={<GalleryHome />} />
-      <Route path="/gallery/:heaterName" element={<HeaterDetail />} />
-      <Route path="/gallery/:heaterName" element={<HeaterDetail />} />  
+        <Route path="/gallery" element={<GalleryHome />} />
+        <Route path="/gallery/:heaterName" element={<HeaterDetail />} />
         <Route path="/cart" element={<Cart />} />
-         <Route path="/orders" element={<Orders />} />       
         <Route path="/more" element={<More />} />
         <Route path="/details" element={<Details />} />
-
-        <Route element={<GuestRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
-
-        <Route element={<ProtectedRoute />}>
-          <Route path="/settings" element={<Settings />} />
-           <Route path="/paymentcard" element={<PaymentCard />} />  
-          <Route path="/paymentcode" element={<PaymentCode />} />           
-          <Route path="/checkoutaddress" element={<CheckoutAddress />} />
-          <Route path="/paymentmethod" element={<PaymentMethod />} /> 
-          <Route path="/payment" element={<Payment />} />
-           <Route path="/conn" element={<Conn />} />         
-          <Route path="/atmcode" element={<Atmcode/>} />                   
-          <Route path="/confirm-order" element={<ConfirmOrder />} />
-          <Route path="/code" element={<Code />} /> 
-          
-          <Route path="/success" element={<Success />} />      
-          <Route path="/wrong" element={<Wrong />} />                 
-        </Route>
-
-        <Route element={<ProtectedRoute requiredRole="admin" />}>
-          <Route path="/admin" element={<Admin />} />
-        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/paymentcard" element={<PaymentCard />} />  
+        <Route path="/paymentcode" element={<PaymentCode />} />           
+        <Route path="/checkoutaddress" element={<CheckoutAddress />} />
+        <Route path="/paymentmethod" element={<PaymentMethod />} /> 
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/conn" element={<Conn />} />         
+        <Route path="/atmcode" element={<Atmcode/>} />                   
+        <Route path="/confirm-order" element={<ConfirmOrder />} />
+        <Route path="/code" element={<Code />} /> 
+        <Route path="/success" element={<Success />} />      
+        <Route path="/wrong" element={<Wrong />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
 
       {!hideNavbar && <Navbar />}
@@ -92,5 +79,3 @@ function App() {
 }
 
 export default App;
-
-
