@@ -1,59 +1,71 @@
-// authService.js
+import axios from 'axios';
 
-// استبدل جميع التصديرات الافتراضية بتصديرات مسماة
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+export const setAuthToken = (token) => {
+  if (token) {
+    localStorage.setItem('authToken', token);
+  }
+};
+
+export const getAuthToken = () => {
+  return localStorage.getItem('authToken');
+};
+
+export const removeAuthToken = () => {
+  localStorage.removeItem('authToken');
+};
+
 export const loginUser = async (email, password) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
+    const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+      email,
+      password
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'معلومات التسجيل غير صحيحة');
+    
+    if (response.data.token) {
+      setAuthToken(response.data.token);
     }
-
-    return await response.json();
+    
+    return response.data;
   } catch (error) {
-    throw new Error(error.message || 'حدث خطأ أثناء تسجيل الدخول');
+    throw new Error(error.response?.data?.message || 'Login failed');
   }
 };
 
 export const logoutUser = async () => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/logout`, {
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      throw new Error('تعذر تسجيل الخروج');
-    }
-
-    return await response.json();
+    await axios.post(`${API_BASE_URL}/api/auth/logout`);
+    removeAuthToken();
+    return true;
   } catch (error) {
-    throw new Error(error.message || 'حدث خطأ أثناء تسجيل الخروج');
+    console.error('Logout error:', error);
+    return false;
   }
 };
 
 export const verifyToken = async () => {
+  const token = getAuthToken();
+  
+  if (!token) return { isAuthenticated: false };
+  
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      return { isAuthenticated: false };
-    }
-    
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+    const response = await axios.get(`${API_BASE_URL}/api/auth/verify`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
     
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     return { isAuthenticated: false };
   }
 };
+
+axios.interceptors.request.use(config => {
+  const token = getAuthToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, error => {
+  return Promise.reject(error);
+});
